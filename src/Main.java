@@ -1,29 +1,46 @@
+import java.util.Scanner;
+
 public class Main {
     public static void main(String[] args) {
-        test1();
+        Frog frog = frogByUser();
+        Point[] route = route();
+        aliveOrNot(frog,route);
     }
 
-    public static void test1 ()
-    {
-        Frog testFrog = new Frog(new Point(0, 0), 1);
-        Frog testFrog2 = new Frog(0, 0, 100);
-        int n = 3;
-        Point[] route = new Point[n];   //создался массив, НО не точек
-        //а указателей на точки
-        route[0] = new Point(2, 0);
-        route[1] = new Point(1, 1);
-        route[2] = new Point(0, 1);
-
-        for (int i = 0; i < route.length; i++) {
-            double d = Point.calcDistance(testFrog.place, route[i]);
-            if( d<= testFrog.tongueLength)
-            {
-                System.out.println("кузнечек съеден в "+(i+1) +" точке");
+    public static Frog frogByUser(){
+        System.out.print("Введите координаты лягушки и длину языка: ");
+        Scanner read = new Scanner(System.in);
+        int x, y, l;
+        x=read.nextInt();
+        y=read.nextInt();
+        Point point = new Point(x,y);
+        l=read.nextInt();
+        return new Frog(point,l);
+    }
+    public static Point[] route(){
+        System.out.print("Введите длину маршрута: ");
+        Scanner read = new Scanner(System.in);
+        int l;
+        l=read.nextInt();
+        Point[] route = new Point[l];
+        for (int i = 0; i<l; i++)
+        {
+            System.out.print("Введите координаты точки: ");
+            route[i] = new Point(read.nextInt(), read.nextInt());
+        }
+        return route;
+    }
+    public static void aliveOrNot(Frog frog, Point[] route){
+        boolean j = true;
+        for (int i = 0; i<route.length; i++){
+            if (Point.calcDistance(route[i],frog.place)<= frog.tongueLength){
+                System.out.println("Съели в точке "+(i+1));
+                j = false;
                 break;
             }
         }
+        if (j) System.out.println("YES");
     }
-
     //TODO:
     //1 сделать функцию, которая спрашивает у пользователя координаты и длину языка и выдает в
     //  качестве результата новую Лягушку
@@ -40,7 +57,6 @@ class Point{
     public Point(int x, int y) {
         this.x = x;
         this.y = y;
-        System.out.println("вызван конструктор точки с параметрами "+x+"; "+y);
     }
 
     public static double calcDistance(Point p1, Point p2){
@@ -51,16 +67,19 @@ class Point{
 class Frog{
     Point place;
     int tongueLength;
+    public Frog() {
+        this.place = new Point(0,0);
+        this.tongueLength = 0;
+    }
 
     public Frog(Point place, int tongueLength) {
         this.place = place;
         this.tongueLength = tongueLength;
-        System.out.println("вызван конструктор Frog с 2 параметрами");
     }
 
     public Frog(int x, int y, int len){
         place = new Point(x, y);
         tongueLength = len;
-        System.out.println("вызван конструктор Frog с 3 параметрами");
     }
+
 }
